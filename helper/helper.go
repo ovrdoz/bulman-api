@@ -63,6 +63,7 @@ func GetConfiguration() Configuration {
 	}
 
 	log.Printf(port + " definition to start backend")
+	log.Printf(connectionString + " definition to start backend")
 
 	configuration := Configuration{
 		port,
