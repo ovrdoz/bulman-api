@@ -17,6 +17,7 @@ func main() {
 	r.HandleFunc("/api/projects", apis.CreateProject).Methods("POST")
 	r.HandleFunc("/api/projects/{id}", apis.UpdateProject).Methods("PUT")
 	r.HandleFunc("/api/projects/{id}", apis.DeleteProject).Methods("DELETE")
+	r.Run(":" + config.Port)
 
 	config := helper.GetConfiguration()
 	log.Fatal(http.ListenAndServe(config.Port, r))
