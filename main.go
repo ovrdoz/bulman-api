@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"bulman-api/apis"
+	"bulman-api/helper"
 
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
@@ -20,11 +21,11 @@ func main() {
 
 	handler := cors.New(cors.Options{
 		AllowedOrigins: []string{"*"},
-		AllowedMethods: []string{"GET", "POST", "PUT", "PATCH", "DELETE"},
-		AllowedHeaders: []string{"a_custom_header", "content_type"},
+		AllowedMethods: []string{"POST", "GET", "OPTIONS", "PUT", "DELETE"},
+		AllowedHeaders: []string{"Accept", "content-type", "Content-Length", "Accept-Encoding", "X-CSRF-Token", "Authorization"},
 	}).Handler(r)
 
-	//config := helper.GetConfiguration()
-	log.Fatal(http.ListenAndServe(":5005", handler))
+	config := helper.GetConfiguration()
+	log.Fatal(http.ListenAndServe(":"+config.Port, handler))
 
 }
