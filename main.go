@@ -8,6 +8,7 @@ import (
 	"bulman-api/helper"
 
 	"github.com/gorilla/mux"
+	"github.com/rs/cors"
 )
 
 func main() {
