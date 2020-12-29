@@ -22,10 +22,11 @@ func main() {
 		AllowedOrigins: []string{"*"},
 		AllowedMethods: []string{"GET", "POST", "PUT", "PATCH", "DELETE"},
 		AllowedHeaders: []string{"a_custom_header", "content_type"},
-	}).Handler(router)
-	http.ListenAndServe(config.Port, handler)
+	}).Handler(r)
 
 	config := helper.GetConfiguration()
 	log.Fatal(http.ListenAndServe(config.Port, r))
+
+	http.ListenAndServe(config.Port, handler)
 
 }
