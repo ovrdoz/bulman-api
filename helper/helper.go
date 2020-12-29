@@ -53,10 +53,17 @@ type Configuration struct {
 
 // GetConfiguration method basically populate configuration information from .env and return Configuration model
 func GetConfiguration() Configuration {
-
+	port := os.Getenv("PORT")
+	if port == "" {
+		log.Errorf("$PORT not set")
+	}
+	connectionString := os.Getenv("CONNECTION_STRING")
+	if connectionString == "" {
+		log.Errorf("$CONNECTION_STRING not set")
+	}
 	configuration := Configuration{
-		os.Getenv("PORT"),
-		os.Getenv("CONNECTION_STRING"),
+		port,
+		connectionString,
 	}
 
 	return configuration
