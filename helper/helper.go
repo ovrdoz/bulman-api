@@ -55,11 +55,11 @@ type Configuration struct {
 func GetConfiguration() Configuration {
 	port := os.Getenv("PORT")
 	if port == "" {
-		log.Errorf("$PORT not set")
+		log.Fatal("$PORT not set")
 	}
 	connectionString := os.Getenv("CONNECTION_STRING")
 	if connectionString == "" {
-		log.Errorf("$CONNECTION_STRING not set")
+		log.Fatal("$CONNECTION_STRING not set")
 	}
 	configuration := Configuration{
 		port,
