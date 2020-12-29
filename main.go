@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"bulman-api/apis"
-	"bulman-api/helper"
 
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
@@ -25,7 +24,7 @@ func main() {
 		AllowedHeaders: []string{"a_custom_header", "content_type"},
 	}).Handler(r)
 
-	config := helper.GetConfiguration()
-	log.Fatal(http.ListenAndServe(config.Port, handler))
+	//config := helper.GetConfiguration()
+	log.Fatal(http.ListenAndServe(":5005", handler))
 
 }
