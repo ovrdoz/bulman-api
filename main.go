@@ -26,8 +26,6 @@ func main() {
 	}).Handler(r)
 
 	config := helper.GetConfiguration()
-	log.Fatal(http.ListenAndServe(config.Port, r))
-
-	http.ListenAndServe(config.Port, handler)
+	log.Fatal(http.ListenAndServe(config.Port, handler))
 
 }
