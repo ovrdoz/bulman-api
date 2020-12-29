@@ -62,7 +62,7 @@ func GetConfiguration() Configuration {
 		log.Fatal("$CONNECTION_STRING not set")
 	}
 
-	log.Fatal("$PORT definition to start backend")
+	log.Printf(port + " definition to start backend")
 
 	configuration := Configuration{
 		port,
