@@ -61,6 +61,9 @@ func GetConfiguration() Configuration {
 	if connectionString == "" {
 		log.Fatal("$CONNECTION_STRING not set")
 	}
+
+	log.Fatal("$PORT definition to start backend")
+
 	configuration := Configuration{
 		port,
 		connectionString,
