@@ -17,6 +17,12 @@ func main() {
 	r.HandleFunc("/api/projects", apis.CreateProject).Methods("POST")
 	r.HandleFunc("/api/projects/{id}", apis.UpdateProject).Methods("PUT")
 	r.HandleFunc("/api/projects/{id}", apis.DeleteProject).Methods("DELETE")
+	handler := cors.New(cors.Options{
+		AllowedOrigins: []string{"*"},
+		AllowedMethods: []string{"GET", "POST", "PUT", "PATCH", "DELETE"},
+		AllowedHeaders: []string{"a_custom_header", "content_type"},
+	}).Handler(router)
+	http.ListenAndServe(config.Port, handler)
 
 	config := helper.GetConfiguration()
 	log.Fatal(http.ListenAndServe(config.Port, r))
