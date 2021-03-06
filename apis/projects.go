@@ -12,6 +12,7 @@ import (
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 var client = helper.ConnectDB()
@@ -20,8 +21,11 @@ func GetProjects(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var projects []models.Project
 
+	findOptions := options.Find()
+	findOptions.SetSort(bson.D{{"created_at", -1}})
+
 	var collection = client.Database("bulman").Collection("projects")
-	cur, err := collection.Find(context.TODO(), bson.M{})
+	cur, err := collection.Find(context.TODO(), bson.M{}, findOptions)
 	if err != nil {
 		helper.GetError(err, w)
 		return
