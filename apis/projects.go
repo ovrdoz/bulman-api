@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"time"
 
 	"bulman-api/helper"
 	"bulman-api/models"
@@ -74,6 +75,11 @@ func CreateProject(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	var project models.Project
+
+	if project.CreatedAt.IsZero() {
+		project.CreatedAt = time.Now()
+	}
+
 	_ = json.NewDecoder(r.Body).Decode(&project)
 
 	var collection = client.Database("bulman").Collection("projects")
