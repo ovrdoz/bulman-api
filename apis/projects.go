@@ -21,7 +21,7 @@ func GetProjects(w http.ResponseWriter, r *http.Request) {
 	var projects []models.Project
 
 	var collection = client.Database("bulman").Collection("projects")
-	cur, err := collection.Find(context.TODO(), bson.M{})
+	cur, err := collection.Find(context.TODO(), bson.M{}).SetSort(bson.D{{"created", -1}})
 	if err != nil {
 		helper.GetError(err, w)
 		return
