@@ -16,16 +16,14 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-var client = helper.ConnectDB()
-
-func GetProjects(w http.ResponseWriter, r *http.Request) {
+func GetScenarios(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var projects []models.Project
+	var scenarios []models.Scenario
 
 	findOptions := options.Find()
 	findOptions.SetSort(bson.D{{"created_at", -1}})
 
-	var collection = helper.ConnectDB().Database("bulman").Collection("projects")
+	var collection = helper.ConnectDB().Database("bulman").Collection("scenarios")
 	cur, err := collection.Find(context.TODO(), bson.M{}, findOptions)
 	if err != nil {
 		helper.GetError(err, w)
@@ -35,23 +33,23 @@ func GetProjects(w http.ResponseWriter, r *http.Request) {
 	defer cur.Close(context.TODO())
 
 	for cur.Next(context.TODO()) {
-		var project models.Project
-		err := cur.Decode(&project)
+		var scenario models.Scenario
+		err := cur.Decode(&scenario)
 		if err != nil {
 			log.Fatal(err)
 		}
-		projects = append(projects, project)
+		scenarios = append(scenarios, scenario)
 	}
 
 	if err := cur.Err(); err != nil {
 		log.Fatal(err)
 	}
-	json.NewEncoder(w).Encode(projects)
+	json.NewEncoder(w).Encode(scenarios)
 }
 
-func GetProject(w http.ResponseWriter, r *http.Request) {
+func GetScenario(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var project models.Project
+	var scenario models.Scenario
 	var params = mux.Vars(r)
 
 	// string to primitive.ObjectID
@@ -60,30 +58,30 @@ func GetProject(w http.ResponseWriter, r *http.Request) {
 	// We create filter. If it is unnecessary to sort data for you, you can use bson.M{}
 	filter := bson.M{"_id": id}
 
-	var collection = helper.ConnectDB().Database("bulman").Collection("projects")
-	err := collection.FindOne(context.TODO(), filter).Decode(&project)
+	var collection = helper.ConnectDB().Database("bulman").Collection("scenarios")
+	err := collection.FindOne(context.TODO(), filter).Decode(&scenario)
 
 	if err != nil {
 		helper.GetError(err, w)
 		return
 	}
 
-	json.NewEncoder(w).Encode(project)
+	json.NewEncoder(w).Encode(scenario)
 }
 
-func CreateProject(w http.ResponseWriter, r *http.Request) {
+func CreateScenario(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	var project models.Project
+	var scenario models.Scenario
 
-	if project.CreatedAt.IsZero() {
-		project.CreatedAt = time.Now()
+	if scenario.CreatedAt.IsZero() {
+		scenario.CreatedAt = time.Now()
 	}
 
-	_ = json.NewDecoder(r.Body).Decode(&project)
+	_ = json.NewDecoder(r.Body).Decode(&scenario)
 
-	var collection = helper.ConnectDB().Database("bulman").Collection("projects")
-	result, err := collection.InsertOne(context.TODO(), project)
+	var collection = helper.ConnectDB().Database("bulman").Collection("scenarios")
+	result, err := collection.InsertOne(context.TODO(), scenario)
 
 	if err != nil {
 		helper.GetError(err, w)
@@ -93,44 +91,49 @@ func CreateProject(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(result)
 }
 
-func UpdateProject(w http.ResponseWriter, r *http.Request) {
+func UpdateScenario(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	var params = mux.Vars(r)
 	id, _ := primitive.ObjectIDFromHex(params["id"])
 
-	var project models.Project
+	var scenario models.Scenario
 	filter := bson.M{"_id": id}
-	_ = json.NewDecoder(r.Body).Decode(&project)
+	_ = json.NewDecoder(r.Body).Decode(&scenario)
 
 	update := bson.D{
 		{"$set", bson.D{
-			{"name", project.Name},
-			{"description", project.Description},
-			{"scenarios_total", project.ScenariosTotal},
+			{"name", scenario.Name},
+			{"project", scenario.Project},
+			{"state", scenario.State},
+			{"url", scenario.URL},
+			{"host", scenario.Host},
+			{"method", scenario.Method},
+			{"x-meta-payload", scenario.XMetaPayload},
+			{"x-meta-headers", scenario.XMetaHeaders},
 		}},
 	}
 
-	var collection = helper.ConnectDB().Database("bulman").Collection("projects")
-	err := collection.FindOneAndUpdate(context.TODO(), filter, update).Decode(&project)
+	var collection = helper.ConnectDB().Database("bulman").Collection("scenarios")
+	err := collection.FindOneAndUpdate(context.TODO(), filter, update).Decode(&scenario)
 
 	if err != nil {
 		helper.GetError(err, w)
 		return
 	}
 
-	project.ID = id
+	scenario.ID = id
 
-	json.NewEncoder(w).Encode(project)
+	json.NewEncoder(w).Encode(scenario)
 }
 
-func DeleteProject(w http.ResponseWriter, r *http.Request) {
+func DeleteScenario(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var params = mux.Vars(r)
 	id, err := primitive.ObjectIDFromHex(params["id"])
 	filter := bson.M{"_id": id}
 
-	var collection = helper.ConnectDB().Database("bulman").Collection("projects")
+	var collection = helper.ConnectDB().Database("bulman").Collection("scenarios")
 	deleteResult, err := collection.DeleteOne(context.TODO(), filter)
 
 	if err != nil {

@@ -19,6 +19,12 @@ func main() {
 	r.HandleFunc("/api/projects/{id}", apis.UpdateProject).Methods("PUT")
 	r.HandleFunc("/api/projects/{id}", apis.DeleteProject).Methods("DELETE")
 
+	r.HandleFunc("/api/scenarios", apis.GetProjects).Methods("GET")
+	r.HandleFunc("/api/scenarios/{id}", apis.GetProject).Methods("GET")
+	r.HandleFunc("/api/scenarios", apis.CreateProject).Methods("POST")
+	r.HandleFunc("/api/scenarios/{id}", apis.UpdateProject).Methods("PUT")
+	r.HandleFunc("/api/scenarios/{id}", apis.DeleteProject).Methods("DELETE")
+
 	handler := cors.New(cors.Options{
 		AllowedOrigins: []string{"*"},
 		AllowedMethods: []string{"POST", "GET", "OPTIONS", "PUT", "DELETE"},
