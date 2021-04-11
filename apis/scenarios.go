@@ -47,6 +47,45 @@ func GetScenarios(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(scenarios)
 }
 
+func GetScenariosByProject(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var scenarios []models.Scenario
+	var params = mux.Vars(r)
+	id, _ := primitive.ObjectIDFromHex(params["id"])
+	// We create filter. If it is unnecessary to sort data for you, you can use bson.M{}
+	filter := bson.M{}
+	filter["project_id"] = id
+
+	findOptions := options.Find()
+	findOptions.SetSort(bson.D{{"created_at", -1}})
+
+	jsonString, _ := json.Marshal(filter)
+	log.Printf("mgo query: %s\n", jsonString)
+
+	var collection = helper.ConnectDB().Database("bulman").Collection("scenarios")
+	cur, err := collection.Find(context.TODO(), filter, findOptions)
+	if err != nil {
+		helper.GetError(err, w)
+		return
+	}
+
+	defer cur.Close(context.TODO())
+
+	for cur.Next(context.TODO()) {
+		var scenario models.Scenario
+		err := cur.Decode(&scenario)
+		if err != nil {
+			log.Fatal(err)
+		}
+		scenarios = append(scenarios, scenario)
+	}
+
+	if err := cur.Err(); err != nil {
+		log.Fatal(err)
+	}
+	json.NewEncoder(w).Encode(scenarios)
+}
+
 func GetScenario(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var scenario models.Scenario
@@ -94,18 +133,19 @@ func CreateScenario(w http.ResponseWriter, r *http.Request) {
 func UpdateScenario(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	var params = mux.Vars(r)
-	id, _ := primitive.ObjectIDFromHex(params["id"])
-
 	var scenario models.Scenario
+	var params = mux.Vars(r)
+
+	id, _ := primitive.ObjectIDFromHex(params["id"])
 	filter := bson.M{"_id": id}
+
 	_ = json.NewDecoder(r.Body).Decode(&scenario)
 
 	update := bson.D{
 		{"$set", bson.D{
 			{"name", scenario.Name},
-			{"project", scenario.Project},
 			{"state", scenario.State},
+			{"project_id", scenario.ProjectID},
 			{"url", scenario.URL},
 			{"host", scenario.Host},
 			{"method", scenario.Method},

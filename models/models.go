@@ -12,12 +12,13 @@ type Project struct {
 	Description    *string            `json:"description,omitempty"`
 	ScenariosTotal *int64             `json:"scenarios_total,omitempty"`
 	CreatedAt      time.Time          `json:"created_at" bson:"created_at"`
+	Scenarios      []Scenario         `bson:"scenarios" json:"scenarios"`
 }
 
 type Scenario struct {
 	ID           primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
 	Name         *string            `json:"name,omitempty"`
-	Project      *string            `json:"project,omitempty"`
+	ProjectID    primitive.ObjectID `json:"project_id,omitempty" bson:"project_id,omitempty"`
 	State        *string            `json:"state,omitempty"`
 	URL          *string            `json:"url,omitempty"`
 	Host         *string            `json:"host,omitempty"`

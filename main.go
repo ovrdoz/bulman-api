@@ -20,8 +20,9 @@ func main() {
 	r.HandleFunc("/api/projects/{id}", apis.DeleteProject).Methods("DELETE")
 
 	r.HandleFunc("/api/scenarios", apis.GetScenarios).Methods("GET")
-	r.HandleFunc("/api/scenarios/{id}", apis.GetScenario).Methods("GET")
-	r.HandleFunc("/api/scenarios", apis.CreateScenario).Methods("POST")
+	r.HandleFunc("/api/scenarios/project/{id}", apis.GetScenariosByProject).Methods("GET")
+	//r.HandleFunc("/api/scenarios/{id}", apis.GetScenario).Methods("GET")
+	r.HandleFunc("/api/scenarios/{id}", apis.CreateScenario).Methods("POST")
 	r.HandleFunc("/api/scenarios/{id}", apis.UpdateScenario).Methods("PUT")
 	r.HandleFunc("/api/scenarios/{id}", apis.DeleteScenario).Methods("DELETE")
 
