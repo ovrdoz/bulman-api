@@ -12,7 +12,6 @@ type Project struct {
 	Description    *string            `json:"description,omitempty"`
 	ScenariosTotal *int64             `json:"scenarios_total,omitempty"`
 	CreatedAt      time.Time          `json:"created_at" bson:"created_at"`
-	Scenarios      []Scenario         `bson:"scenarios" json:"scenarios"`
 }
 
 type Scenario struct {

@@ -13,18 +13,32 @@ import (
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func GetProjects(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var projects []models.Project
 
-	findOptions := options.Find()
-	findOptions.SetSort(bson.D{{"created_at", -1}})
+	pipeline := []bson.M{
+		{
+			"$lookup": bson.M{
+				"from":         "scenarios",
+				"localField":   "_id",
+				"foreignField": "project_id",
+				"as":           "scenariostotal",
+			},
+		},
+		{
+			"$addFields": bson.M{
+				"scenariostotal": bson.M{"$size": "$scenariostotal"},
+			},
+		}, {
+			"$sort": bson.D{{"created_at", -1}},
+		},
+	}
 
 	var collection = helper.ConnectDB().Database("bulman").Collection("projects")
-	cur, err := collection.Find(context.TODO(), bson.M{}, findOptions)
+	cur, err := collection.Aggregate(context.TODO(), pipeline)
 	if err != nil {
 		helper.GetError(err, w)
 		return
