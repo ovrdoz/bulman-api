@@ -54,7 +54,7 @@ func GetScenariosByProject(w http.ResponseWriter, r *http.Request) {
 	id, _ := primitive.ObjectIDFromHex(params["id"])
 	// We create filter. If it is unnecessary to sort data for you, you can use bson.M{}
 	filter := bson.M{}
-	filter["project_id"] = id
+	filter["project.$id"] = id
 
 	findOptions := options.Find()
 	findOptions.SetSort(bson.D{{"created_at", -1}})
@@ -145,7 +145,7 @@ func UpdateScenario(w http.ResponseWriter, r *http.Request) {
 		{"$set", bson.D{
 			{"name", scenario.Name},
 			{"state", scenario.State},
-			{"project_id", scenario.ProjectID},
+			{"project_id", scenario.Project},
 			{"url", scenario.URL},
 			{"host", scenario.Host},
 			{"method", scenario.Method},

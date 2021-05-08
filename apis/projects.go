@@ -24,7 +24,7 @@ func GetProjects(w http.ResponseWriter, r *http.Request) {
 			"$lookup": bson.M{
 				"from":         "scenarios",
 				"localField":   "_id",
-				"foreignField": "project_id",
+				"foreignField": "project.$id",
 				"as":           "scenariostotal",
 			},
 		},

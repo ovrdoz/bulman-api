@@ -17,7 +17,6 @@ type Project struct {
 type Scenario struct {
 	ID           primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
 	Name         *string            `json:"name,omitempty"`
-	ProjectID    primitive.ObjectID `json:"project_id,omitempty" bson:"project_id,omitempty"`
 	State        *string            `json:"state,omitempty"`
 	URL          *string            `json:"url,omitempty"`
 	Host         *string            `json:"host,omitempty"`
@@ -25,6 +24,12 @@ type Scenario struct {
 	XMetaPayload *XMeta             `json:"x-meta-payload,omitempty"`
 	XMetaHeaders *XMeta             `json:"x-meta-headers,omitempty"`
 	CreatedAt    time.Time          `json:"created_at" bson:"created_at"`
+	Project      DBRef              `json:"project,omitempty" bson:"project,omitempty"`
+}
+
+type DBRef struct {
+	Ref interface{} `bson:"$ref"`
+	ID  interface{} `bson:"$id"`
 }
 
 type XMeta struct {
