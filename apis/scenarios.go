@@ -49,9 +49,6 @@ func GetScenariosByProject(w http.ResponseWriter, r *http.Request) {
 	if err := cur.Err(); err != nil {
 		log.Fatal(err)
 	}
-	if len(scenarios) == 0 {
-		return
-	}
 
 	json.NewEncoder(w).Encode(scenarios)
 }
