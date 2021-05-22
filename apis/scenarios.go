@@ -16,37 +16,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func GetScenarios(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	var scenarios []models.Scenario
-
-	findOptions := options.Find()
-	findOptions.SetSort(bson.D{{"created_at", -1}})
-
-	var collection = helper.ConnectDB().Database("bulman").Collection("scenarios")
-	cur, err := collection.Find(context.TODO(), bson.M{}, findOptions)
-	if err != nil {
-		helper.GetError(err, w)
-		return
-	}
-
-	defer cur.Close(context.TODO())
-
-	for cur.Next(context.TODO()) {
-		var scenario models.Scenario
-		err := cur.Decode(&scenario)
-		if err != nil {
-			log.Fatal(err)
-		}
-		scenarios = append(scenarios, scenario)
-	}
-
-	if err := cur.Err(); err != nil {
-		log.Fatal(err)
-	}
-	json.NewEncoder(w).Encode(scenarios)
-}
-
 func GetScenariosByProject(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var scenarios []models.Scenario
@@ -58,9 +27,6 @@ func GetScenariosByProject(w http.ResponseWriter, r *http.Request) {
 
 	findOptions := options.Find()
 	findOptions.SetSort(bson.D{{"created_at", -1}})
-
-	jsonString, _ := json.Marshal(filter)
-	log.Printf("mgo query: %s\n", jsonString)
 
 	var collection = helper.ConnectDB().Database("bulman").Collection("scenarios")
 	cur, err := collection.Find(context.TODO(), filter, findOptions)
@@ -83,6 +49,10 @@ func GetScenariosByProject(w http.ResponseWriter, r *http.Request) {
 	if err := cur.Err(); err != nil {
 		log.Fatal(err)
 	}
+	if len(scenarios) == 0 {
+		return
+	}
+
 	json.NewEncoder(w).Encode(scenarios)
 }
 
