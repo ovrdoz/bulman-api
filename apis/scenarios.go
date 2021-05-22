@@ -147,7 +147,6 @@ func UpdateScenario(w http.ResponseWriter, r *http.Request) {
 			{"state", scenario.State},
 			{"project", scenario.Project},
 			{"url", scenario.URL},
-			{"host", scenario.Host},
 			{"method", scenario.Method},
 			{"payload", scenario.Payload},
 			{"headers", scenario.Headers},
