@@ -145,12 +145,13 @@ func UpdateScenario(w http.ResponseWriter, r *http.Request) {
 		{"$set", bson.D{
 			{"name", scenario.Name},
 			{"state", scenario.State},
-			{"project_id", scenario.Project},
+			{"project", scenario.Project},
 			{"url", scenario.URL},
 			{"host", scenario.Host},
 			{"method", scenario.Method},
-			{"x-meta-payload", scenario.XMetaPayload},
-			{"x-meta-headers", scenario.XMetaHeaders},
+			{"payload", scenario.Payload},
+			{"headers", scenario.Headers},
+			{"parameters", scenario.Parameters},
 		}},
 	}
 

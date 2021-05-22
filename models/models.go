@@ -15,16 +15,22 @@ type Project struct {
 }
 
 type Scenario struct {
-	ID           primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
-	Name         *string            `json:"name,omitempty"`
-	State        *string            `json:"state,omitempty"`
-	URL          *string            `json:"url,omitempty"`
-	Host         *string            `json:"host,omitempty"`
-	Method       *string            `json:"method,omitempty"`
-	XMetaPayload *XMeta             `json:"x-meta-payload,omitempty"`
-	XMetaHeaders *XMeta             `json:"x-meta-headers,omitempty"`
-	CreatedAt    time.Time          `json:"created_at" bson:"created_at"`
-	Project      DBRef              `json:"project,omitempty" bson:"project,omitempty"`
+	ID         primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
+	Name       *string            `json:"name,omitempty"`
+	State      *string            `json:"state,omitempty"`
+	URL        *string            `json:"url,omitempty"`
+	Host       *string            `json:"host,omitempty"`
+	Method     *string            `json:"method,omitempty"`
+	Headers    []Map              `json:"headers,omitempty"`
+	Parameters []Map              `json:"parameters,omitempty"`
+	Payload    *string            `json:"payload,omitempty"`
+	CreatedAt  time.Time          `json:"created_at" bson:"created_at"`
+	Project    DBRef              `json:"project,omitempty" bson:"project,omitempty"`
+}
+
+type Map struct {
+	Key   *string `json:"key,omitempty"`
+	Value *string `json:"value,omitempty"`
 }
 
 type DBRef struct {
