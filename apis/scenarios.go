@@ -111,6 +111,7 @@ func GetScenario(w http.ResponseWriter, r *http.Request) {
 func CreateScenario(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
+	var params = mux.Vars(r)
 	var scenario models.Scenario
 
 	_ = json.NewDecoder(r.Body).Decode(&scenario)
@@ -119,6 +120,8 @@ func CreateScenario(w http.ResponseWriter, r *http.Request) {
 		scenario.CreatedAt = time.Now()
 	}
 
+	id, _ := primitive.ObjectIDFromHex(params["id"])
+	scenario.Project.ID = id
 	scenario.Project.Ref = "project"
 
 	var collection = helper.ConnectDB().Database("bulman").Collection("scenarios")
