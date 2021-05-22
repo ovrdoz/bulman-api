@@ -113,11 +113,13 @@ func CreateScenario(w http.ResponseWriter, r *http.Request) {
 
 	var scenario models.Scenario
 
+	_ = json.NewDecoder(r.Body).Decode(&scenario)
+
 	if scenario.CreatedAt.IsZero() {
 		scenario.CreatedAt = time.Now()
 	}
 
-	_ = json.NewDecoder(r.Body).Decode(&scenario)
+	scenario.Project.Ref = "project"
 
 	var collection = helper.ConnectDB().Database("bulman").Collection("scenarios")
 	result, err := collection.InsertOne(context.TODO(), scenario)

@@ -33,8 +33,8 @@ type Map struct {
 }
 
 type DBRef struct {
-	Ref interface{} `bson:"$ref"`
-	ID  interface{} `bson:"$id"`
+	Ref interface{}        `bson:"$ref"`
+	ID  primitive.ObjectID `bson:"$id"`
 }
 
 type XMeta struct {
