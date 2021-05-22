@@ -19,7 +19,6 @@ type Scenario struct {
 	Name       *string            `json:"name,omitempty"`
 	State      *string            `json:"state,omitempty"`
 	URL        *string            `json:"url,omitempty"`
-	Host       *string            `json:"host,omitempty"`
 	Method     *string            `json:"method,omitempty"`
 	Headers    []Map              `json:"headers,omitempty"`
 	Parameters []Map              `json:"parameters,omitempty"`
