@@ -119,7 +119,6 @@ func UpdateProject(w http.ResponseWriter, r *http.Request) {
 		{"$set", bson.D{
 			{"name", project.Name},
 			{"description", project.Description},
-			{"scenarios_total", project.ScenariosTotal},
 		}},
 	}
 
